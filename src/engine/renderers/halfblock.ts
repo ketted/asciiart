@@ -1,5 +1,5 @@
 import type { Cell, Renderer, RenderOptions, RGB, Tile } from '../types'
-import { rampGlyph } from './ascii'
+import { rampGlyph } from './shared'
 
 const BLOCK_RAMP = ' ░▒▓█'
 

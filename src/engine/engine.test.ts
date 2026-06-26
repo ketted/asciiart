@@ -37,3 +37,35 @@ describe('selectRenderer', () => {
     expect(selectRenderer(0.99, sorted).id).toBe('braille')
   })
 })
+
+describe('render (blended modes)', () => {
+  it('routes cells to different renderers based on per-tile detail', () => {
+    // 2 cells wide x 1 cell tall -> width 4, height 4.
+    const w = 4, h = 4
+    const data = new Uint8ClampedArray(w * h * 4)
+    const set = (x: number, y: number, v: number) => {
+      const i = (y * w + x) * 4
+      data[i] = v; data[i + 1] = v; data[i + 2] = v; data[i + 3] = 255
+    }
+    for (let y = 0; y < h; y++) {
+      // Left cell (cols 0-1): flat mid-gray -> detail 0.
+      set(0, y, 128)
+      set(1, y, 128)
+      // Right cell (cols 2-3): col 0 black, col 1 white -> detail 1.
+      set(2, y, 0)
+      set(3, y, 255)
+    }
+    const grid: PixelGrid = { data, width: w, height: h }
+
+    const out = render(grid, ['block', 'braille'], opts)
+    expect(out).toHaveLength(1)
+    expect(out[0]).toHaveLength(2)
+
+    // Left, flat (detail 0) -> block-ramp glyph (luminance 0.5 -> '▒').
+    expect(out[0][0].glyph).toBe('▒')
+    // Right, high detail -> a braille codepoint (U+2800..U+28FF).
+    const cp = out[0][1].glyph.codePointAt(0)!
+    expect(cp).toBeGreaterThanOrEqual(0x2800)
+    expect(cp).toBeLessThanOrEqual(0x28ff)
+  })
+})

@@ -1,5 +1,5 @@
 import type { Cell, Renderer, RenderOptions, Tile } from '../types'
-import { rampGlyph, fgFor } from './ascii'
+import { rampGlyph, fgFor } from './shared'
 
 // Light -> dark (increasing fill).
 const RAMP = ' ░▒▓█'
