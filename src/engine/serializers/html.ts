@@ -8,6 +8,9 @@ function cellHtml(c: Cell): string {
   const g = escapeHtml(c.glyph)
   if (!c.fg && !c.bg) return g
   const styles: string[] = []
+  // fg/bg components are engine-produced numbers (rounded 0–255 from the tile
+  // average), so the style attribute needs no escaping. Do NOT route arbitrary
+  // user strings in here — that would open an attribute-injection hole.
   if (c.fg) styles.push(`color:rgb(${c.fg.r},${c.fg.g},${c.fg.b})`)
   if (c.bg) styles.push(`background:rgb(${c.bg.r},${c.bg.g},${c.bg.b})`)
   return `<span style="${styles.join(';')}">${g}</span>`

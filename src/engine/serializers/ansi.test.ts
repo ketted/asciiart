@@ -21,4 +21,11 @@ describe('toAnsi', () => {
     const grid: Cell[][] = [[{ glyph: 'a' }], [{ glyph: 'b' }]]
     expect(toAnsi(grid)).toBe('a\nb')
   })
+  it('returns empty string for empty grid', () => {
+    expect(toAnsi([])).toBe('')
+  })
+  it('emits a bg-only code when no fg present', () => {
+    const grid: Cell[][] = [[{ glyph: 'x', bg: { r: 4, g: 5, b: 6 } }]]
+    expect(toAnsi(grid)).toBe(`\x1b[48;2;4;5;6mx${RESET}`)
+  })
 })
