@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+# ASCII Art Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A browser-based image-to-text-art converter. Load an image, tune the controls,
+and watch it render live into character art you can copy or download.
 
-Currently, two official plugins are available:
+## Modes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Five rendering modes, each with different detail capacity:
 
-## React Compiler
+- **ascii** — classic brightness ramp of ASCII characters
+- **block** — Unicode block-shading characters
+- **braille** — Braille dot patterns (2x4 dots per cell)
+- **halfblock** — upper/lower half blocks for doubled vertical resolution
+- **emoji** — emoji chosen by brightness/color
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Select **multiple** modes to blend them: each cell is rendered by the mode whose
+detail rank best matches that cell's local detail, so flat areas and busy areas
+get different glyphs in the same image.
 
-## Expanding the Oxlint configuration
+## Controls
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- **Width** — output width in characters (height follows from aspect ratio)
+- **Preserve aspect ratio** — keep the image's proportions
+- **Color** — emit per-cell foreground color instead of monochrome
+- **Background** — `transparent`, `white`, `black`, or `auto` (picks black/white
+  from the image's mean luminance)
+- **Brightness / Contrast / Saturation** — pre-render image adjustments
+- **Dither** — error-diffusion dithering for smoother tonal ramps
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Output
+
+- **Copy** — plain text to the clipboard
+- **Download .txt** — plain text file
+- **Download .ans** — ANSI file; `cat`-ing it in a truecolor terminal shows the
+  rendered color
+
+## Running
+
+```sh
+npm run dev    # start the dev server
+npm test       # run the test suite
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
