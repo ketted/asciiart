@@ -18,7 +18,7 @@ function download(filename: string, text: string) {
   a.href = url
   a.download = filename
   a.click()
-  URL.revokeObjectURL(url)
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
 export default function App() {
@@ -30,12 +30,17 @@ export default function App() {
     const { cols, rows } = computeDimensions(
       image.naturalWidth, image.naturalHeight, controls.width, controls.preserveAspect,
     )
-    const probe = drawImageToGrid(image, cols, rows, 'transparent')
-    let sum = 0
-    for (let i = 0; i < probe.data.length; i += 4) {
-      sum += luminance({ r: probe.data[i], g: probe.data[i + 1], b: probe.data[i + 2] })
+    // The mean-luminance hint is only consumed when background === 'auto'.
+    // Skip the extra probe sample otherwise to halve sampling cost.
+    let meanLum = 0.5
+    if (controls.background === 'auto') {
+      const probe = drawImageToGrid(image, cols, rows, 'transparent')
+      let sum = 0
+      for (let i = 0; i < probe.data.length; i += 4) {
+        sum += luminance({ r: probe.data[i], g: probe.data[i + 1], b: probe.data[i + 2] })
+      }
+      meanLum = sum / (probe.data.length / 4)
     }
-    const meanLum = sum / (probe.data.length / 4)
 
     let grid = drawImageToGrid(image, cols, rows, controls.background, meanLum)
     grid = applyBrightness(grid, controls.brightness)
@@ -60,7 +65,14 @@ export default function App() {
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
         <Preview html={html} background={controls.background} />
         <div style={{ display: 'flex', gap: 8, padding: 8, borderTop: '1px solid #ccc' }}>
-          <button onClick={() => navigator.clipboard.writeText(plain)} disabled={!image}>
+          <button
+            onClick={() =>
+              navigator.clipboard
+                .writeText(plain)
+                .catch((err) => console.warn('Copy to clipboard failed:', err))
+            }
+            disabled={!image}
+          >
             Copy
           </button>
           <button onClick={() => download('art.txt', plain)} disabled={!image}>

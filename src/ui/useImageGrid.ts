@@ -10,6 +10,7 @@ export function useImage() {
       setImage(img)
       URL.revokeObjectURL(url)
     }
+    img.onerror = () => URL.revokeObjectURL(url)
     img.src = url
   }, [])
 
