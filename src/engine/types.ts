@@ -28,9 +28,11 @@ export interface RenderOptions {
   color: boolean
   threshold: number // 0..1, braille dot on/off cutoff
   background: Background
+  /** Flip luminance->glyph polarity so grayscale reads as light-on-dark. */
+  invert?: boolean
 }
 
-export type RendererId = 'ascii' | 'block' | 'braille' | 'halfblock' | 'emoji'
+export type RendererId = 'ascii' | 'block' | 'braille' | 'halfblock'
 
 export interface Renderer {
   id: RendererId

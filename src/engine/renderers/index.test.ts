@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { REGISTRY, ALL_MODES } from './index'
 
 describe('renderer registry', () => {
-  it('exposes all five renderers keyed by id', () => {
-    expect(ALL_MODES).toEqual(['ascii', 'block', 'braille', 'halfblock', 'emoji'])
+  it('exposes all four renderers keyed by id', () => {
+    expect(ALL_MODES).toEqual(['ascii', 'block', 'braille', 'halfblock'])
     for (const id of ALL_MODES) {
       expect(REGISTRY[id].id).toBe(id)
     }

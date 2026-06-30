@@ -35,3 +35,13 @@ describe('blockRenderer', () => {
     expect(blockRenderer.renderCell(tile(1), opts).glyph).toBe(' ')
   })
 })
+
+describe('invert option', () => {
+  it('flips the luminance->glyph polarity for grayscale (light-on-dark)', () => {
+    const inv: RenderOptions = { ...opts, invert: true }
+    // black pixel now maps to a space, white pixel to the densest glyph
+    expect(asciiRenderer.renderCell(tile(0), inv).glyph).toBe(' ')
+    expect(asciiRenderer.renderCell(tile(1), inv).glyph).toBe('@')
+    expect(blockRenderer.renderCell(tile(1), inv).glyph).toBe('█')
+  })
+})

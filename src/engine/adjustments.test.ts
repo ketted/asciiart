@@ -4,6 +4,7 @@ import {
   applyContrast,
   applySaturation,
   applyDither,
+  applyAutoLevels,
 } from './adjustments'
 import type { PixelGrid } from './types'
 
@@ -42,6 +43,30 @@ describe('applySaturation', () => {
   it('amount 0 is identity', () => {
     const out = applySaturation(px(200, 50, 50), 0)
     expect(Array.from(out.data)).toEqual([200, 50, 50, 255])
+  })
+})
+
+describe('applyAutoLevels', () => {
+  it('stretches each channel from its min/max to the full 0..255 range', () => {
+    // red channel spans 50..200 -> should map to 0..255
+    const grid: PixelGrid = {
+      data: new Uint8ClampedArray([50, 50, 50, 255, 200, 200, 200, 255]),
+      width: 2,
+      height: 1,
+    }
+    const out = applyAutoLevels(grid)
+    expect(out.data[0]).toBe(0)
+    expect(out.data[4]).toBe(255)
+  })
+  it('leaves alpha untouched', () => {
+    const grid: PixelGrid = {
+      data: new Uint8ClampedArray([10, 10, 10, 128, 240, 240, 240, 64]),
+      width: 2,
+      height: 1,
+    }
+    const out = applyAutoLevels(grid)
+    expect(out.data[3]).toBe(128)
+    expect(out.data[7]).toBe(64)
   })
 })
 

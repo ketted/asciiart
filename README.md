@@ -5,13 +5,13 @@ and watch it render live into character art you can copy or download.
 
 ## Modes
 
-Five rendering modes, each with different detail capacity:
+Four rendering modes, each with different detail capacity:
 
 - **ascii** — classic brightness ramp of ASCII characters
 - **block** — Unicode block-shading characters
 - **braille** — Braille dot patterns (2x4 dots per cell)
-- **halfblock** — upper/lower half blocks for doubled vertical resolution
-- **emoji** — emoji chosen by brightness/color
+- **halfblock** — upper/lower half blocks for doubled vertical resolution;
+  paired with **Color** this is the highest-fidelity, near-photographic mode
 
 Select **multiple** modes to blend them: each cell is rendered by the mode whose
 detail rank best matches that cell's local detail, so flat areas and busy areas
@@ -23,8 +23,11 @@ get different glyphs in the same image.
 - **Preserve aspect ratio** — keep the image's proportions
 - **Color** — emit per-cell foreground color instead of monochrome
 - **Background** — `transparent`, `white`, `black`, or `auto` (picks black/white
-  from the image's mean luminance)
-- **Brightness / Contrast / Saturation** — pre-render image adjustments
+  from the image's mean luminance). A `black` background flips the glyph polarity
+  so grayscale art reads correctly as light-on-dark.
+- **Auto enhance** — one toggle that auto-stretches the image's levels to ideal
+  brightness/contrast/saturation; disables the manual sliders while on
+- **Brightness / Contrast / Saturation** — manual pre-render adjustments
 - **Dither** — error-diffusion dithering for smoother tonal ramps
 
 ## Output

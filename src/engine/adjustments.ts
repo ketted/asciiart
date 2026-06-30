@@ -43,6 +43,32 @@ export function applySaturation(grid: PixelGrid, amount: number): PixelGrid {
   return { data, width: grid.width, height: grid.height }
 }
 
+/**
+ * Auto-levels: stretch each RGB channel to the full 0..255 range based on its
+ * own min/max. Acts as automatic brightness + contrast (and a mild white-balance
+ * / saturation lift), which makes flat or washed-out images pop.
+ */
+export function applyAutoLevels(grid: PixelGrid): PixelGrid {
+  const min = [255, 255, 255]
+  const max = [0, 0, 0]
+  for (let i = 0; i < grid.data.length; i += 4) {
+    for (let c = 0; c < 3; c++) {
+      const v = grid.data[i + c]
+      if (v < min[c]) min[c] = v
+      if (v > max[c]) max[c] = v
+    }
+  }
+  const data = new Uint8ClampedArray(grid.data.length)
+  for (let i = 0; i < grid.data.length; i += 4) {
+    for (let c = 0; c < 3; c++) {
+      const range = Math.max(1, max[c] - min[c])
+      data[i + c] = clamp8(((grid.data[i + c] - min[c]) / range) * 255)
+    }
+    data[i + 3] = grid.data[i + 3]
+  }
+  return { data, width: grid.width, height: grid.height }
+}
+
 /** Floyd–Steinberg dithering to black/white per channel. */
 export function applyDither(grid: PixelGrid): PixelGrid {
   const { width, height } = grid

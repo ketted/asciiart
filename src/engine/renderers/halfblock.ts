@@ -1,5 +1,5 @@
 import type { Cell, Renderer, RenderOptions, RGB, Tile } from '../types'
-import { rampGlyph } from './shared'
+import { rampGlyph, effLuminance } from './shared'
 
 const BLOCK_RAMP = ' ░▒▓█'
 
@@ -15,7 +15,7 @@ export const halfblockRenderer: Renderer = {
   detailRank: 3,
   renderCell(tile: Tile, opts: RenderOptions): Cell {
     if (!opts.color) {
-      return { glyph: rampGlyph(tile.luminance, BLOCK_RAMP) }
+      return { glyph: rampGlyph(effLuminance(tile.luminance, opts), BLOCK_RAMP) }
     }
     const top = avg(tile.pixels.slice(0, 4))
     const bottom = avg(tile.pixels.slice(4, 8))

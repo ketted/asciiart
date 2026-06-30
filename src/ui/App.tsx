@@ -3,7 +3,7 @@ import { Controls, DEFAULT_CONTROLS, type ControlState } from './Controls'
 import { Preview } from './Preview'
 import { useImage } from './useImageGrid'
 import { computeDimensions, drawImageToGrid } from '../engine/sampler'
-import { applyBrightness, applyContrast, applySaturation, applyDither } from '../engine/adjustments'
+import { applyBrightness, applyContrast, applySaturation, applyDither, applyAutoLevels } from '../engine/adjustments'
 import { render } from '../engine/engine'
 import { toHtml } from '../engine/serializers/html'
 import { toPlainText } from '../engine/serializers/text'
@@ -43,15 +43,22 @@ export default function App() {
     }
 
     let grid = drawImageToGrid(image, cols, rows, controls.background, meanLum)
-    grid = applyBrightness(grid, controls.brightness)
-    grid = applyContrast(grid, controls.contrast)
-    grid = applySaturation(grid, controls.saturation)
+    if (controls.auto) {
+      // Auto enhance: stretch levels for ideal brightness/contrast/saturation.
+      grid = applyAutoLevels(grid)
+    } else {
+      grid = applyBrightness(grid, controls.brightness)
+      grid = applyContrast(grid, controls.contrast)
+      grid = applySaturation(grid, controls.saturation)
+    }
     if (controls.dither) grid = applyDither(grid)
 
     return render(grid, controls.modes, {
       color: controls.color,
       threshold: 0.5,
       background: controls.background,
+      // On a black background, flip polarity so grayscale reads light-on-dark.
+      invert: controls.background === 'black',
     })
   }, [image, controls])
 

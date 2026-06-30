@@ -7,6 +7,7 @@ export interface ControlState {
   modes: RendererId[]
   color: boolean
   background: Background
+  auto: boolean
   brightness: number
   contrast: number
   saturation: number
@@ -19,6 +20,7 @@ export const DEFAULT_CONTROLS: ControlState = {
   modes: ['ascii'],
   color: false,
   background: 'white',
+  auto: false,
   brightness: 0,
   contrast: 0,
   saturation: 0,
@@ -88,15 +90,22 @@ export function Controls({
         </select>
       </label>
 
-      <label>Brightness: {state.brightness}
-        <input type="range" min={-100} max={100} value={state.brightness}
-          onChange={(e) => set('brightness', Number(e.target.value))} /></label>
-      <label>Contrast: {state.contrast.toFixed(2)}
-        <input type="range" min={-1} max={1} step={0.05} value={state.contrast}
-          onChange={(e) => set('contrast', Number(e.target.value))} /></label>
-      <label>Saturation: {state.saturation.toFixed(2)}
-        <input type="range" min={-1} max={1} step={0.05} value={state.saturation}
-          onChange={(e) => set('saturation', Number(e.target.value))} /></label>
+      <label style={{ fontWeight: 'bold' }}>
+        <input type="checkbox" checked={state.auto}
+          onChange={(e) => set('auto', e.target.checked)} /> Auto enhance (brightness/contrast/saturation)
+      </label>
+
+      <fieldset disabled={state.auto} style={{ opacity: state.auto ? 0.5 : 1, border: 'none', padding: 0, margin: 0 }}>
+        <label>Brightness: {state.brightness}
+          <input type="range" min={-100} max={100} value={state.brightness}
+            onChange={(e) => set('brightness', Number(e.target.value))} /></label>
+        <label>Contrast: {state.contrast.toFixed(2)}
+          <input type="range" min={-1} max={1} step={0.05} value={state.contrast}
+            onChange={(e) => set('contrast', Number(e.target.value))} /></label>
+        <label>Saturation: {state.saturation.toFixed(2)}
+          <input type="range" min={-1} max={1} step={0.05} value={state.saturation}
+            onChange={(e) => set('saturation', Number(e.target.value))} /></label>
+      </fieldset>
 
       <label>
         <input type="checkbox" checked={state.dither}
