@@ -55,7 +55,7 @@ export function Controls({
 
       <label>
         Width: {state.width}
-        <input type="range" min={20} max={200} value={state.width}
+        <input type="range" min={20} max={400} value={state.width}
           onChange={(e) => set('width', Number(e.target.value))} />
       </label>
 
