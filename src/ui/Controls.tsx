@@ -27,6 +27,15 @@ export const DEFAULT_CONTROLS: ControlState = {
   dither: false,
 }
 
+/** One-click combinations that look good. Each merges onto the current state. */
+const PRESETS: { name: string; settings: Partial<ControlState> }[] = [
+  { name: 'Photographic', settings: { modes: ['halfblock'], color: true, auto: true, background: 'white' } },
+  { name: 'Neon braille', settings: { modes: ['braille'], color: true, auto: true, background: 'black' } },
+  { name: 'Colour blend', settings: { modes: ['ascii', 'block', 'braille'], color: true, auto: true, background: 'white' } },
+  { name: 'Classic blend', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: false, background: 'white' } },
+  { name: 'Inked (B&W)', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: true, background: 'black' } },
+]
+
 export function Controls({
   state,
   onChange,
@@ -53,6 +62,22 @@ export function Controls({
         onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
       />
 
+      <div>
+        <div style={{ fontWeight: 'bold', marginBottom: 4 }}>Recommended</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {PRESETS.map((p) => (
+            <button
+              key={p.name}
+              type="button"
+              onClick={() => onChange({ ...state, ...p.settings })}
+              style={{ fontSize: 12, padding: '4px 8px', cursor: 'pointer' }}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <label>
         Width: {state.width}
         <input type="range" min={20} max={200} value={state.width}
@@ -76,7 +101,7 @@ export function Controls({
 
       <label>
         <input type="checkbox" checked={state.color}
-          onChange={(e) => set('color', e.target.checked)} /> Color
+          onChange={(e) => set('color', e.target.checked)} /> Colour
       </label>
 
       <label>
