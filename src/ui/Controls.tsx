@@ -76,7 +76,7 @@ export function Controls({
 
       <label>
         <input type="checkbox" checked={state.color}
-          onChange={(e) => set('color', e.target.checked)} /> Color
+          onChange={(e) => set('color', e.target.checked)} /> Colour
       </label>
 
       <label>
