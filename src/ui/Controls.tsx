@@ -27,13 +27,17 @@ export const DEFAULT_CONTROLS: ControlState = {
   dither: false,
 }
 
-/** One-click combinations that look good. Each merges onto the current state. */
+/**
+ * One-click combinations that look good. Each merges onto the current state.
+ * Width is part of the preset: half-block/braille reward higher resolution, so
+ * 'Photographic' bumps width up to reproduce that crisp, near-photographic look.
+ */
 const PRESETS: { name: string; settings: Partial<ControlState> }[] = [
-  { name: 'Photographic', settings: { modes: ['halfblock'], color: true, auto: true, background: 'white' } },
-  { name: 'Neon braille', settings: { modes: ['braille'], color: true, auto: true, background: 'black' } },
-  { name: 'Colour blend', settings: { modes: ['ascii', 'block', 'braille'], color: true, auto: true, background: 'white' } },
-  { name: 'Classic blend', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: false, background: 'white' } },
-  { name: 'Inked (B&W)', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: true, background: 'black' } },
+  { name: 'Photographic', settings: { modes: ['halfblock'], color: true, auto: true, background: 'white', width: 160 } },
+  { name: 'Neon braille', settings: { modes: ['braille'], color: true, auto: true, background: 'black', width: 140 } },
+  { name: 'Colour blend', settings: { modes: ['ascii', 'block', 'braille'], color: true, auto: true, background: 'white', width: 120 } },
+  { name: 'Classic blend', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: false, background: 'white', width: 110 } },
+  { name: 'Inked (B&W)', settings: { modes: ['ascii', 'block', 'braille'], color: false, auto: true, background: 'black', width: 120 } },
 ]
 
 export function Controls({
